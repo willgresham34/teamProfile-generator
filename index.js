@@ -11,7 +11,7 @@ const managerQuestions = () => {
         {
             type:'input', 
             message: 'What is your managers name?',
-            name: 'manNam',
+            name: 'manName',
         },
 
         {
@@ -45,11 +45,26 @@ const managerQuestions = () => {
         
     ])
     .then(res => {
-        fs.writeFile('', 
-        )
+        const manCard = `
+        <div class="card" style="width: 18rem;">
+                        <div class="card-header"> <h3>${res.manName}</h3> <br> <h4>Manager</h4></div>
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item">ID: ${res.manId} </li>
+                          <li class="list-group-item"><a href="mailto:${res.manEmail}"> Email: ${res.manEmail}</a> </li>
+                          <li class="list-group-item">Office Number: ${res.officeID}</li>
+                        </ul>
+                      </div>
+        `;
+    if (res.contQuestion === "Employee") {
+        employeeQuestions();
+    } else if(res.contQuestion === "Intern") {
+        internQuestions();
+    } else {
+        writeHTMLFile();
+    }
     })
 }
-    const EmployeeQuestions = () => {
+    const employeeQuestions = () => {
     inquirer.prompt([
         {
             type:'input', 
@@ -72,7 +87,7 @@ const managerQuestions = () => {
         {
             type: 'input',
             message: 'What is your employees gitHub user name?',
-            name: 'officeID', 
+            name: 'empGithub', 
         },
 
         {
@@ -87,25 +102,44 @@ const managerQuestions = () => {
         },
         
     ])
+    .then(res => {
+        const engCard = `
+        <div class="card" style="width: 18rem;">
+                        <div class="card-header"> <h3>${res.empName}</h3> <br> <h4>Manager</h4></div>
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item">ID: ${res.empId} </li>
+                          <li class="list-group-item">Email: ${res.empEmail} </li>
+                          <li class="list-group-item">Github: ${res.empGithub}</li>
+                        </ul>
+                      </div>
+        `;
+    if (res.contQuestion === "Employee") {
+        employeeQuestions();
+    } else if(res.contQuestion === "Intern") {
+        internQuestions();
+    } else {
+        writeHTMLFile();
+    }
+    })
 }
 const internQuestions = () => {
     inquirer.prompt([
         {
             type:'input', 
             message: 'What is your interns name?',
-            name: 'internName',
+            name: 'intName',
         },
 
         {
             type: 'input',
             message: 'What is your interns ID number?',
-            name: 'internId', 
+            name: 'intId', 
         },
 
         {
             type: 'input',
             message: 'What is your interns email?',
-            name: 'internEmail', 
+            name: 'intEmail', 
         },
 
         {
@@ -126,7 +160,28 @@ const internQuestions = () => {
         },
         
     ])
+    .then(res => {
+        const intCard = `
+        <div class="card" style="width: 18rem;">
+                        <div class="card-header"> <h3>${res.intName}</h3> <br> <h4>Intern</h4></div>
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item">ID: ${res.intId} </li>
+                          <li class="list-group-item">Email: ${res.intEmail} </li>
+                          <li class="list-group-item">School: ${res.school}</li>
+                        </ul>
+                      </div>
+        `;
+        if (res.contQuestion === "Employee") {
+            employeeQuestions();
+        } else if(res.contQuestion === "Intern") {
+            internQuestions();
+        } else {
+            writeHTMLFile();
+        }
+            
+    })
 }
+
 function writeHTMLFile() {
     fs.writeFile('team.html', 
     `
@@ -150,7 +205,9 @@ function writeHTMLFile() {
         <body>
             <div class="container-fluid">
                 <div class="row">
-                    ${profileCardsHTML}
+                    <div class="col-md-12 d-flex">
+                         ${profileCardsHTML}
+                    </div>
                 </div>
             </div>
         </body>
