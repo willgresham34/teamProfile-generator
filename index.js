@@ -4,7 +4,6 @@ const Employee = require('./lib/employee');
 const Manager = require('./lib/manager');
 const Engineer = require('./lib/engineer');
 const Intern = require('./lib/intern');
-const { writeFile } = require('fs/promises');
 
 const managerQuestions = () => {
     inquirer.prompt([
@@ -28,7 +27,7 @@ const managerQuestions = () => {
 
         {
             type: 'input',
-            message: 'What is your managers ID number?',
+            message: 'What is your managers office number?',
             name: 'officeID', 
         },
 
@@ -45,7 +44,7 @@ const managerQuestions = () => {
         
     ])
     .then(res => {
-        const manCard = `
+        let manCard = `
         <div class="card" style="width: 18rem;">
                         <div class="card-header"> <h3>${res.manName}</h3> <br> <h4>Manager</h4></div>
                         <ul class="list-group list-group-flush">
@@ -55,14 +54,17 @@ const managerQuestions = () => {
                         </ul>
                       </div>
         `;
+    var profileCardsHTML = manCard;
+
     if (res.contQuestion === "Employee") {
         employeeQuestions();
     } else if(res.contQuestion === "Intern") {
         internQuestions();
     } else {
-        writeHTMLFile();
+        writeHTMLFile(profileCardsHTML);
     }
     })
+    .catch(err => console.error(err)) 
 }
     const employeeQuestions = () => {
     inquirer.prompt([
@@ -103,7 +105,7 @@ const managerQuestions = () => {
         
     ])
     .then(res => {
-        const engCard = `
+        let engCard = `
         <div class="card" style="width: 18rem;">
                         <div class="card-header"> <h3>${res.empName}</h3> <br> <h4>Manager</h4></div>
                         <ul class="list-group list-group-flush">
@@ -113,14 +115,19 @@ const managerQuestions = () => {
                         </ul>
                       </div>
         `;
+    
     if (res.contQuestion === "Employee") {
+        profileCardsHTML += `\n ${engCard}` 
         employeeQuestions();
     } else if(res.contQuestion === "Intern") {
+        profileCardsHTML += `\n ${engCard}` 
         internQuestions();
     } else {
-        writeHTMLFile();
+        profileCardsHTML += `\n ${engCard}` 
+        writeHTMLFile(profileCardsHTML);
     }
     })
+    .catch(err => console.error(err)) 
 }
 const internQuestions = () => {
     inquirer.prompt([
@@ -161,7 +168,7 @@ const internQuestions = () => {
         
     ])
     .then(res => {
-        const intCard = `
+        let intCard = `
         <div class="card" style="width: 18rem;">
                         <div class="card-header"> <h3>${res.intName}</h3> <br> <h4>Intern</h4></div>
                         <ul class="list-group list-group-flush">
@@ -171,18 +178,23 @@ const internQuestions = () => {
                         </ul>
                       </div>
         `;
+        profileCardsHTML += `\n ${intCard}` 
         if (res.contQuestion === "Employee") {
             employeeQuestions();
         } else if(res.contQuestion === "Intern") {
             internQuestions();
         } else {
-            writeHTMLFile();
+            writeHTMLFile(profileCardsHTML);
         }
             
     })
+    .catch(err => console.error(err)) 
 }
 
-function writeHTMLFile() {
+
+
+
+function writeHTMLFile(profileCardsHTML) {
     fs.writeFile('team.html', 
     `
     <!DOCTYPE html>
@@ -213,5 +225,8 @@ function writeHTMLFile() {
         </body>
     </html>
     
-    `) 
+    `, 
+        (err) => err ? console.error(err) : console.log('Success, your README.md has been made!')) 
 }
+
+managerQuestions();
