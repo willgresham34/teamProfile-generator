@@ -4,8 +4,9 @@ const Employee = require('./lib/employee');
 const Manager = require('./lib/manager');
 const Engineer = require('./lib/engineer');
 const Intern = require('./lib/intern');
+const Cards = []
 
-const managerQuestions = () => {
+function managerQuestions(Cards){
     inquirer.prompt([
         {
             type:'input', 
@@ -45,8 +46,8 @@ const managerQuestions = () => {
     ])
     .then(res => {
         let manCard = `
-        <div class="card" style="width: 18rem;">
-                        <div class="card-header"> <h3>${res.manName}</h3> <br> <h4>Manager</h4></div>
+        <div class="card teamCards" style="width: 18rem;">
+                        <div class="card-header text-white bg-primary "> <h3>${res.manName}</h3> <br> <h4>Manager</h4></div>
                         <ul class="list-group list-group-flush">
                           <li class="list-group-item">ID: ${res.manId} </li>
                           <li class="list-group-item"><a href="mailto:${res.manEmail}"> Email: ${res.manEmail}</a> </li>
@@ -54,24 +55,23 @@ const managerQuestions = () => {
                         </ul>
                       </div>
         `;
-    var profileCardsHTML = manCard;
-
+        Cards += manCard
     if (res.contQuestion === "Employee") {
-        employeeQuestions();
+        employeeQuestions(Cards);
     } else if(res.contQuestion === "Intern") {
-        internQuestions();
+        internQuestions(Cards);
     } else {
-        writeHTMLFile(profileCardsHTML);
+        writeHTMLFile(Cards);
     }
     })
     .catch(err => console.error(err)) 
 }
-    const employeeQuestions = () => {
+    const employeeQuestions = (Cards) => {
     inquirer.prompt([
         {
             type:'input', 
             message: 'What is your employees name?',
-            name: 'empNam',
+            name: 'empName',
         },
 
         {
@@ -106,30 +106,27 @@ const managerQuestions = () => {
     ])
     .then(res => {
         let engCard = `
-        <div class="card" style="width: 18rem;">
-                        <div class="card-header"> <h3>${res.empName}</h3> <br> <h4>Manager</h4></div>
+        <div class="card teamCards" style="width: 18rem;">
+                        <div class="card-header text-white bg-primary "> <h3>${res.empName}</h3> <br> <h4>Engineer</h4></div>
                         <ul class="list-group list-group-flush">
                           <li class="list-group-item">ID: ${res.empId} </li>
-                          <li class="list-group-item">Email: ${res.empEmail} </li>
-                          <li class="list-group-item">Github: ${res.empGithub}</li>
+                          <li class="list-group-item"><a href="mailto:${res.empEmail}"> Email: ${res.empEmail}</a> </li>
+                          <li class="list-group-item"><a href="https://github.com/${res.empGithub}">Github: ${res.empGithub}</a></li>
                         </ul>
                       </div>
         `;
-    
+    Cards += engCard
     if (res.contQuestion === "Employee") {
-        profileCardsHTML += `\n ${engCard}` 
-        employeeQuestions();
+        employeeQuestions(Cards);
     } else if(res.contQuestion === "Intern") {
-        profileCardsHTML += `\n ${engCard}` 
-        internQuestions();
+        internQuestions(Cards);
     } else {
-        profileCardsHTML += `\n ${engCard}` 
-        writeHTMLFile(profileCardsHTML);
+        writeHTMLFile(Cards);
     }
     })
     .catch(err => console.error(err)) 
 }
-const internQuestions = () => {
+const internQuestions = (Cards) => {
     inquirer.prompt([
         {
             type:'input', 
@@ -169,22 +166,22 @@ const internQuestions = () => {
     ])
     .then(res => {
         let intCard = `
-        <div class="card" style="width: 18rem;">
-                        <div class="card-header"> <h3>${res.intName}</h3> <br> <h4>Intern</h4></div>
+        <div class="card teamCards" style="width: 18rem;">
+                        <div class="card-header text-white bg-primary "> <h3>${res.intName}</h3> <br> <h4>Intern</h4></div>
                         <ul class="list-group list-group-flush">
                           <li class="list-group-item">ID: ${res.intId} </li>
-                          <li class="list-group-item">Email: ${res.intEmail} </li>
+                          <li class="list-group-item"><a href="mailto:${res.intEmail}"> Email: ${res.intEmail}</a> </li>
                           <li class="list-group-item">School: ${res.school}</li>
                         </ul>
                       </div>
         `;
-        profileCardsHTML += `\n ${intCard}` 
+        Cards += intCard
         if (res.contQuestion === "Employee") {
             employeeQuestions();
         } else if(res.contQuestion === "Intern") {
             internQuestions();
         } else {
-            writeHTMLFile(profileCardsHTML);
+            writeHTMLFile(Cards);
         }
             
     })
@@ -194,7 +191,8 @@ const internQuestions = () => {
 
 
 
-function writeHTMLFile(profileCardsHTML) {
+function writeHTMLFile(Cards) {
+    console.log(Cards);
     fs.writeFile('team.html', 
     `
     <!DOCTYPE html>
@@ -205,11 +203,12 @@ function writeHTMLFile(profileCardsHTML) {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+            <link rel="stylesheet" href="./src/style.css">
             <title>Team Profile</title>
          </head>
         <header class="row">
-                <div class="col-md-12 bg-dark text-color-light">
-                    <div class="page-header d-flex justify-content-center align-items-center">
+                <div class="col-md-12 bg-dark text-color-light pageHeader">
+                    <div class="page-header d-flex justify-content-center align-items-center text-primary">
                         <h2>My Teams Profile</h2>
                     </div>
                 </div>
@@ -217,8 +216,8 @@ function writeHTMLFile(profileCardsHTML) {
         <body>
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 d-flex">
-                         ${profileCardsHTML}
+                    <div class="col-md-12 d-flex justify-content-center">
+                         ${Cards}
                     </div>
                 </div>
             </div>
@@ -226,7 +225,7 @@ function writeHTMLFile(profileCardsHTML) {
     </html>
     
     `, 
-        (err) => err ? console.error(err) : console.log('Success, your README.md has been made!')) 
+        (err) => err ? console.error(err) : console.log('Success, your HTML has been made!')) 
 }
 
-managerQuestions();
+managerQuestions(Cards);
