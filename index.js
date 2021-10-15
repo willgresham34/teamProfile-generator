@@ -156,7 +156,6 @@ const internQuestions = (Cards) => {
             type: 'list',
             message: 'Would you like to add employee or intern?',
             choices: [
-                'Employee',
                 'Intern',
                 'No, Thank you',
             ],
@@ -176,9 +175,7 @@ const internQuestions = (Cards) => {
                       </div>
         `;
         Cards += intCard
-        if (res.contQuestion === "Employee") {
-            employeeQuestions();
-        } else if(res.contQuestion === "Intern") {
+        if(res.contQuestion === "Intern") {
             internQuestions();
         } else {
             writeHTMLFile(Cards);

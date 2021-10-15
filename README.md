@@ -18,10 +18,10 @@ Creates profile cards of your team members that includes emails, id numbers, and
 Node and Inquirer
 
 ## Usage
-![Usage Img]()
+![Usage Img](./src/images/HTMLphoto.png)
 
 ## Demo
-[![Demo Img]()]()
+[![Demo Video](./src/images/youtube.png)](https://www.youtube.com/watch?v=3NwTRlxD3FA)
 ## License 
 [![License](https://img.shields.io/badge/License-MIT-brightgreen)](https://opensource.org/licenses/MIT)
 
